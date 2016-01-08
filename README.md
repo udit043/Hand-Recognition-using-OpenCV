@@ -1,5 +1,5 @@
 # Hand-Recognition-using-OpenCV
-
+YouTube ( https://www.youtube.com/watch?v=H9diqywK6NY )
 This C++ code uses OpenCV 'C' api and analyse hand gestures under following ways -
 
 1 - Convert RGB image (taken through web camera (IplImage* src)) into GRAYSCALE (IplImage* gray).
