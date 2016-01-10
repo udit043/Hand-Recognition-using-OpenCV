@@ -23,26 +23,22 @@ int main()
     CvSize sz = cvGetSize(cvQueryFrame( capture));
     //cout<<sz.height<<".."<<sz.width;
 	IplImage* src    = cvCreateImage( sz,8, 3 );
-    
+        IplImage* gray   = cvCreateImage( cvSize(270,270),8, 1 );  
 	while( c != 27)
 	{
 		src = cvQueryFrame(capture);
 		cvSetImageROI(src, cvRect(340,100,270,270));
-		
-		CvSize sz1 = cvGetSize(src);
-		IplImage* gray   = cvCreateImage( sz1,8, 1 );
 		cvCvtColor(src,gray,CV_BGR2GRAY);		
 		cvSmooth(gray,gray,CV_BLUR,(12,12),0);
 		cvNamedWindow( "cay",1);cvShowImage( "cay",gray);   //blur-not-clear
 		cvNamedWindow( "pr",1);cvShowImage( "pr",src);
 		cvThreshold(gray,gray,0,255,(CV_THRESH_BINARY_INV+CV_THRESH_OTSU));
 		cvNamedWindow( "canny",1);cvShowImage( "canny",gray);  //black-white
+		
 		CvMemStorage* storage = cvCreateMemStorage();
 		CvSeq* first_contour = NULL;
 		CvSeq* maxitem=NULL;
 		int cn=cvFindContours(gray,storage,&first_contour,sizeof(CvContour),CV_RETR_CCOMP,CV_CHAIN_APPROX_SIMPLE,cvPoint(0,0));
-
-		
 		double area,max_area=0.0;
 		//int maxn=0,n=0;
 		
