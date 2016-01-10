@@ -9,7 +9,7 @@ using namespace cv;
 int main()
 {
 	int c = 0;
-    CvCapture* capture = cvCaptureFromCAM(0);
+    	CvCapture* capture = cvCaptureFromCAM(0);
     
 	if(!cvQueryFrame(capture))
 	{ 
@@ -20,25 +20,26 @@ int main()
 		cout<<"Video capture failed, please check the camera."<<endl;
 	}
 	
-    CvSize sz = cvGetSize(cvQueryFrame( capture));
-    //cout<<sz.height<<".."<<sz.width;
-	IplImage* src    = cvCreateImage( sz,8, 3 );
-        IplImage* gray   = cvCreateImage( cvSize(270,270),8, 1 );  
+        CvSize sz = cvGetSize(cvQueryFrame( capture));
+    	cout<<sz.height<<".."<<sz.width;
+    	IplImage* src    = cvCreateImage( sz,8, 3 );
+    	IplImage* gray   = cvCreateImage( cvSize(270,270),8, 1 );;
 	while( c != 27)
 	{
 		src = cvQueryFrame(capture);
 		cvSetImageROI(src, cvRect(340,100,270,270));
+
 		cvCvtColor(src,gray,CV_BGR2GRAY);		
 		cvSmooth(gray,gray,CV_BLUR,(12,12),0);
-		cvNamedWindow( "cay",1);cvShowImage( "cay",gray);   //blur-not-clear
-		cvNamedWindow( "pr",1);cvShowImage( "pr",src);
+		cvNamedWindow( "Blur",1);cvShowImage( "Blur",gray);   //blur-not-clear
 		cvThreshold(gray,gray,0,255,(CV_THRESH_BINARY_INV+CV_THRESH_OTSU));
-		cvNamedWindow( "canny",1);cvShowImage( "canny",gray);  //black-white
-		
+		cvNamedWindow( "Threshold",1);cvShowImage( "Threshold",gray);  //black-white
 		CvMemStorage* storage = cvCreateMemStorage();
 		CvSeq* first_contour = NULL;
 		CvSeq* maxitem=NULL;
 		int cn=cvFindContours(gray,storage,&first_contour,sizeof(CvContour),CV_RETR_CCOMP,CV_CHAIN_APPROX_SIMPLE,cvPoint(0,0));
+
+		
 		double area,max_area=0.0;
 		//int maxn=0,n=0;
 		
@@ -80,7 +81,7 @@ int main()
         			//printf("** : %d :**",hullcount);
         		CvConvexityDefect* defectArray;  
 					//	int j=0;  
-        				for(int i = 0; i < hullcount; i++ )
+        				for(int i = 1; i <= hullcount; i++ )
         				{
             				CvPoint pt = **CV_GET_SEQ_ELEM( CvPoint*, hull, i );
             				cvLine( src, pt0, pt, CV_RGB( 255, 0, 0 ), 1, CV_AA, 0 );
@@ -114,7 +115,7 @@ int main()
 							cvDrawContours(src,defects,CV_RGB(0,0,0),CV_RGB(255,0,0),-1,CV_FILLED,8);
 						}
 					}
-					std::cout<<con<<"\n";
+			//		std::cout<<con<<"\n";
 					char txt[40]="";
 					if(con==1)
 					{
@@ -141,7 +142,7 @@ int main()
 						char txt1[]="Jarvis is busy :P"; //Jarvis can't recognise you
 						strcat(txt,txt1);
 					}
-					cvNamedWindow( "pr",1);cvShowImage( "pr",src);
+					cvNamedWindow( "contour",1);cvShowImage( "contour",src);
 					cvResetImageROI(src);
 					CvFont font;
 					cvInitFont(&font, CV_FONT_HERSHEY_SIMPLEX, 1.5, 1.5, 0, 5, CV_AA);
