@@ -21,14 +21,13 @@ int main()
 	}
 	
         CvSize sz = cvGetSize(cvQueryFrame( capture));
-    	cout<<sz.height<<".."<<sz.width;
+    	cout << "Height & width of captured frame: " << sz.height <<" x " << sz.width;
     	IplImage* src    = cvCreateImage( sz,8, 3 );
     	IplImage* gray   = cvCreateImage( cvSize(270,270),8, 1 );;
 	while( c != 27)
 	{
 		src = cvQueryFrame(capture);
 		cvSetImageROI(src, cvRect(340,100,270,270));
-
 		cvCvtColor(src,gray,CV_BGR2GRAY);		
 		cvSmooth(gray,gray,CV_BLUR,(12,12),0);
 		cvNamedWindow( "Blur",1);cvShowImage( "Blur",gray);   //blur-not-clear
@@ -37,26 +36,24 @@ int main()
 		CvMemStorage* storage = cvCreateMemStorage();
 		CvSeq* first_contour = NULL;
 		CvSeq* maxitem=NULL;
-		int cn=cvFindContours(gray,storage,&first_contour,sizeof(CvContour),CV_RETR_CCOMP,CV_CHAIN_APPROX_SIMPLE,cvPoint(0,0));
-
 		
+		int cn=cvFindContours(gray,storage,&first_contour,sizeof(CvContour),CV_RETR_CCOMP,CV_CHAIN_APPROX_SIMPLE,cvPoint(0,0));
 		double area,max_area=0.0;
 		//int maxn=0,n=0;
 		
 		CvSeq* ptr=0;
 		if(cn>0)
 		{
-			
 			for(ptr=first_contour;ptr!=NULL;ptr=ptr->h_next)
 			{
-		    	area=fabs(cvContourArea(ptr,CV_WHOLE_SEQ,0));
-		    	if(area>max_area)
-		    	{
-		    		max_area=area;
-		    		maxitem=ptr;
-		    		//maxn=n;
-		    	}
-	        	//n++;
+		    		area=fabs(cvContourArea(ptr,CV_WHOLE_SEQ,0));
+		    		if(area>max_area)
+		    		{
+		    			max_area=area;
+		    			maxitem=ptr;
+		    			//maxn=n;
+		    		}
+	        		//n++;
 			}
 			if(max_area > 1000)
 			{
@@ -68,26 +65,26 @@ int main()
 				CvSeq* defects;
 				
 				for(int i = 0; i < maxitem->total; i++ )
-        		{
-				    CvPoint* p = CV_GET_SEQ_ELEM( CvPoint, maxitem, i );
-            		pt0.x = p->x;
-            		pt0.y = p->y;
-            		cvSeqPush( ptseq, &pt0 );
-        		}
+        			{
+					CvPoint* p = CV_GET_SEQ_ELEM( CvPoint, maxitem, i );
+            				pt0.x = p->x;
+            				pt0.y = p->y;
+            				cvSeqPush( ptseq, &pt0 );
+        			}
 				hull = cvConvexHull2( ptseq, 0, CV_CLOCKWISE, 0 );
-        				int hullcount = hull->total;
-        		defects= cvConvexityDefects(ptseq,hull,storage2  );
+        			int hullcount = hull->total;
+        			defects= cvConvexityDefects(ptseq,hull,storage2  );
         			//pt0 = **CV_GET_SEQ_ELEM( CvPoint*, hull, hullcount - 1 );
         			//printf("** : %d :**",hullcount);
-        		CvConvexityDefect* defectArray;  
-					//	int j=0;  
-        				for(int i = 1; i <= hullcount; i++ )
-        				{
+        			CvConvexityDefect* defectArray;  
+				//	int j=0;  
+        			for(int i = 1; i <= hullcount; i++ )
+        			{
             				CvPoint pt = **CV_GET_SEQ_ELEM( CvPoint*, hull, i );
             				cvLine( src, pt0, pt, CV_RGB( 255, 0, 0 ), 1, CV_AA, 0 );
             				pt0 = pt;
-        				}
-				for(;defects;defects = defects->h_next)  
+        			}
+				for( ; defects; defects = defects->h_next)  
 				{  
 					int nomdef = defects->total; // defect amount  
 					//outlet_float( m_nomdef, nomdef );  
@@ -115,7 +112,7 @@ int main()
 							cvDrawContours(src,defects,CV_RGB(0,0,0),CV_RGB(255,0,0),-1,CV_FILLED,8);
 						}
 					}
-			//		std::cout<<con<<"\n";
+					//std::cout<<con<<"\n";
 					char txt[40]="";
 					if(con==1)
 					{
@@ -147,8 +144,7 @@ int main()
 					CvFont font;
 					cvInitFont(&font, CV_FONT_HERSHEY_SIMPLEX, 1.5, 1.5, 0, 5, CV_AA);
 					cvPutText(src, txt, cvPoint(50, 50), &font, cvScalar(0, 0, 255, 0)); 
-				//	j++;  
-        
+					//j++;  
 					// Free memory.         
 					free(defectArray);  
 				} 
@@ -157,7 +153,6 @@ int main()
 			}
 		}
 		cvReleaseMemStorage( &storage );
-		
 		cvNamedWindow( "threshold",1);cvShowImage( "threshold",src);
 		c = cvWaitKey(100);
 	}
