@@ -1,4 +1,4 @@
-Follow below steps to compile my opencv code in quick way..
+Follow below steps to compile my OpenCV code in quick way..
 
 First open Dev C++ and click on 'File' -> 'New' -> 'Project'.
 ![image](https://user-images.githubusercontent.com/9850882/32575943-751d81ce-c4fb-11e7-8182-66904cb6265d.png)
