@@ -1,4 +1,4 @@
-MIT License
+This project is licensed under MIT License:
 
 Copyright (c) 2018 Udit Raikwar
 
